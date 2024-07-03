@@ -1,39 +1,25 @@
-import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+package mytetris;
 
-public class TetrisGame extends JFrame {
-    private TetrisField field;
+// Swingライブラリをインポート
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-    public TetrisGame() {
-        setTitle("Tetris Game");
-        field = new TetrisField();
-        add(field);
-        pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class TetrisGame extends JFrame { // TetrisGameクラスの宣言
+    private TetrisField field; // フィールドを表すTetrisFieldオブジェクト
 
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT:
-                        field.getCurrentTetromino().moveLeft(); // 左に移動
-                        field.repaint(); // 再描画
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        field.getCurrentTetromino().moveRight(); // 右に移動
-                        field.repaint(); // 再描画
-                        break;
-                }
-            }
-        });
+    public TetrisGame() { // コンストラクタ
+        setTitle("Tetris Game"); // ウィンドウのタイトルを設定
+        field = new TetrisField(); // TetrisFieldオブジェクトを作成
+        add(field); // フィールドをウィンドウに追加
+        pack(); // ウィンドウのサイズをパネルに合わせる
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ウィンドウを閉じる操作を設定
+        setLocationRelativeTo(null); // ウィンドウを画面の中央に配置
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TetrisGame game = new TetrisGame();
-            game.setVisible(true);
+    public static void main(String[] args) { // メインメソッド
+        SwingUtilities.invokeLater(() -> { // GUIスレッドで実行
+            TetrisGame game = new TetrisGame(); // TetrisGameオブジェクトを作成
+            game.setVisible(true); // ウィンドウを表示
         });
     }
 }
