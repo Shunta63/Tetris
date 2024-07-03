@@ -1,0 +1,39 @@
+import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class TetrisGame extends JFrame {
+    private TetrisField field;
+
+    public TetrisGame() {
+        setTitle("Tetris Game");
+        field = new TetrisField();
+        add(field);
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        field.getCurrentTetromino().moveLeft(); // 左に移動
+                        field.repaint(); // 再描画
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        field.getCurrentTetromino().moveRight(); // 右に移動
+                        field.repaint(); // 再描画
+                        break;
+                }
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            TetrisGame game = new TetrisGame();
+            game.setVisible(true);
+        });
+    }
+}
