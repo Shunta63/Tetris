@@ -1,13 +1,16 @@
-import java.awt.*;
+package mytetris;
 
-public class Tetromino {
-    private int[][] shape; // テトリミノの形状
-    private int row; // テトリミノの行位置
-    private int col; // テトリミノの列位置
+// グラフィックスのためのクラスをインポート
+import java.awt.Color;
+import java.util.Random; // ランダムな数を生成するためのクラスをインポート
+
+public class Tetromino { // Tetrominoクラスの宣言
+    private int[][] shape; // テトリミノの形状を表す2次元配列
+    private int row; // テトリミノの現在の行位置
+    private int col; // テトリミノの現在の列位置
     private Color color; // テトリミノの色
 
-    // テトリミノの形状定義
-    private static final int[][][] SHAPES = {
+    private static final int[][][] SHAPES = { // テトリミノの形状を定義した定数配列
         {{1, 1, 1, 1}}, // I型
         {{1, 1, 1}, {0, 1, 0}}, // T型
         {{1, 1, 0}, {0, 1, 1}}, // Z型
@@ -17,62 +20,72 @@ public class Tetromino {
         {{1, 1, 1}, {0, 0, 1}} // J型
     };
 
-    // テトリミノの色定義
-    private static final Color[] COLORS = {
+    private static final Color[] COLORS = { // テトリミノの色を定義した定数配列
         Color.CYAN, Color.MAGENTA, Color.RED, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.BLUE
     };
 
-    public Tetromino(int shapeIndex, int startRow, int startCol) {
-        this.shape = SHAPES[shapeIndex];
-        this.row = startRow;
-        this.col = startCol;
-        this.color = COLORS[shapeIndex];
+    public Tetromino(int shapeIndex, int startRow, int startCol) { // コンストラクタ
+        this.shape = SHAPES[shapeIndex]; // 指定された形状を設定
+        this.row = startRow; // 初期行位置を設定
+        this.col = startCol; // 初期列位置を設定
+        this.color = COLORS[shapeIndex]; // 色を設定
     }
 
-    public int[][] getShape() {
+    public static Tetromino createRandomTetromino(int startRow, int startCol) { // ランダムなテトリミノを作成するメソッド
+        Random random = new Random(); // ランダムオブジェクトを作成
+        int shapeIndex = random.nextInt(SHAPES.length); // ランダムに形状を選択
+        return new Tetromino(shapeIndex, startRow, startCol); // 新しいテトリミノを返す
+    }
+
+    public int[][] getShape() { // テトリミノの形状を返すメソッド
         return shape;
     }
 
-    public int getRow() {
+    public int getRow() { // テトリミノの現在の行位置を返すメソッド
         return row;
     }
 
-    public int getCol() {
+    public int getCol() { // テトリミノの現在の列位置を返すメソッド
         return col;
     }
 
-    public Color getColor() {
+    public Color getColor() { // テトリミノの色を返すメソッド
         return color;
     }
 
-    public void setPosition(int row, int col) {
-        this.row = row;
-        this.col = col;
+    public void setPosition(int row, int col) { // テトリミノの位置を設定するメソッド
+        this.row = row; // 行位置を設定
+        this.col = col; // 列位置を設定
     }
 
-    public void moveLeft() {
-        if (canMove(col - 1)) {
-            this.col--;
-        }
+    public void moveLeft() { // テトリミノを左に移動するメソッド
+        col--; // 列位置を減少させる
     }
 
-    public void moveRight() {
-        if (canMove(col + 1)) {
-            this.col++;
-        }
+    public void moveRight() { // テトリミノを右に移動するメソッド
+        col++; // 列位置を増加させる
     }
 
-    private boolean canMove(int newCol) {
-        // 新しい位置がフィールドの左右の境界内にあるかを確認
-        for (int row = 0; row < shape.length; row++) {
-            for (int col = 0; col < shape[row].length; col++) {
-                if (shape[row][col] == 1) {
-                    if (newCol + col < 0 || newCol + col >= 10) { // フィールドの境界チェック
-                        return false;
+    public boolean canMoveLeft(int[][] field) { // テトリミノが左に移動できるかチェックするメソッド
+        return canMove(col - 1, field); // 左に移動可能か判定
+    }
+
+    public boolean canMoveRight(int[][] field) { // テトリミノが右に移動できるかチェックするメソッド
+        return canMove(col + 1, field); // 右に移動可能か判定
+    }
+
+    private boolean canMove(int newCol, int[][] field) { // 指定された列位置に移動できるかチェックするメソッド
+        for (int r = 0; r < shape.length; r++) { // テトリミノの行をループ
+            for (int c = 0; c < shape[r].length; c++) { // テトリミノの列をループ
+                if (shape[r][c] == 1) { // テトリミノのブロックがある場合
+                    int newRow = row + r; // 新しい行位置を計算
+                    int newColPos = newCol + c; // 新しい列位置を計算
+                    if (newColPos < 0 || newColPos >= field[0].length || field[newRow][newColPos] == 1) { // 移動先がフィールド外または他のブロックがある場合
+                        return false; // 移動不可
                     }
                 }
             }
         }
-        return true;
+        return true; // 移動可能
     }
 }
