@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TetrisField extends JPanel {
     private final int ROWS = 20; // フィールドの行数
@@ -11,7 +13,25 @@ public class TetrisField extends JPanel {
     public TetrisField() {
         setPreferredSize(new Dimension(COLS * CELL_SIZE, ROWS * CELL_SIZE)); // パネルの推奨サイズを設定
         setBackground(Color.BLACK); // 背景色を黒に設定
-        currentTetromino = new Tetromino(0, 0, 0); // 初期テトリミノを作成
+        int startCol = (COLS / 2) - 1; // 初期位置を中央に設定
+        currentTetromino = new Tetromino(0, 0, startCol); // 初期テトリミノを作成
+
+        setFocusable(true); // キーボード入力を受け取るためにフォーカスを設定
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        currentTetromino.moveLeft(); // 左に移動
+                        repaint(); // 再描画
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        currentTetromino.moveRight(); // 右に移動
+                        repaint(); // 再描画
+                        break;
+                }
+            }
+        });
     }
 
     @Override
