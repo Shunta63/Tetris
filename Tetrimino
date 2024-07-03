@@ -49,4 +49,12 @@ public class Tetromino {
         this.row = row;
         this.col = col;
     }
+
+    public void moveLeft() {
+        this.col--;
+    }
+
+    public void moveRight() {
+        this.col++;
+    }
 }
