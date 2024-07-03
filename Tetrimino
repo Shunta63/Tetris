@@ -1,0 +1,52 @@
+import java.awt.*;
+
+public class Tetromino {
+    private int[][] shape; // テトリミノの形状
+    private int row; // テトリミノの行位置
+    private int col; // テトリミノの列位置
+    private Color color; // テトリミノの色
+
+    // テトリミノの形状定義
+    private static final int[][][] SHAPES = {
+        {{1, 1, 1, 1}}, // I型
+        {{1, 1, 1}, {0, 1, 0}}, // T型
+        {{1, 1, 0}, {0, 1, 1}}, // Z型
+        {{0, 1, 1}, {1, 1, 0}}, // S型
+        {{1, 1}, {1, 1}}, // O型
+        {{1, 1, 1}, {1, 0, 0}}, // L型
+        {{1, 1, 1}, {0, 0, 1}} // J型
+    };
+
+    // テトリミノの色定義
+    private static final Color[] COLORS = {
+        Color.CYAN, Color.MAGENTA, Color.RED, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.BLUE
+    };
+
+    public Tetromino(int shapeIndex, int startRow, int startCol) {
+        this.shape = SHAPES[shapeIndex];
+        this.row = startRow;
+        this.col = startCol;
+        this.color = COLORS[shapeIndex];
+    }
+
+    public int[][] getShape() {
+        return shape;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+}
