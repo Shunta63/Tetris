@@ -51,10 +51,28 @@ public class Tetromino {
     }
 
     public void moveLeft() {
-        this.col--;
+        if (canMove(col - 1)) {
+            this.col--;
+        }
     }
 
     public void moveRight() {
-        this.col++;
+        if (canMove(col + 1)) {
+            this.col++;
+        }
+    }
+
+    private boolean canMove(int newCol) {
+        // 新しい位置がフィールドの左右の境界内にあるかを確認
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] == 1) {
+                    if (newCol + col < 0 || newCol + col >= 10) { // フィールドの境界チェック
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
