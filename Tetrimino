@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.Random;
 
 public class Tetromino {
     private int[][] shape; // テトリミノの形状
@@ -28,12 +27,6 @@ public class Tetromino {
         this.row = startRow;
         this.col = startCol;
         this.color = COLORS[shapeIndex];
-    }
-
-    public static Tetromino createRandomTetromino(int startRow, int startCol) {
-        Random random = new Random();
-        int shapeIndex = random.nextInt(SHAPES.length);
-        return new Tetromino(shapeIndex, startRow, startCol);
     }
 
     public int[][] getShape() {
