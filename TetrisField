@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TetrisField extends JPanel {
     private final int ROWS = 20; // フィールドの行数
@@ -12,13 +14,24 @@ public class TetrisField extends JPanel {
         setPreferredSize(new Dimension(COLS * CELL_SIZE, ROWS * CELL_SIZE)); // パネルの推奨サイズを設定
         setBackground(Color.BLACK); // 背景色を黒に設定
         int startCol = (COLS / 2) - 2; // 初期位置を中央に設定
-        currentTetromino = Tetromino.createRandomTetromino(0, startCol); // ランダムなテトリミノを作成
+        currentTetromino = new Tetromino(0, 0, startCol); // 初期テトリミノを作成
 
         setFocusable(true); // キーボード入力を受け取るためにフォーカスを設定
-    }
-
-    public Tetromino getCurrentTetromino() {
-        return currentTetromino;
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        currentTetromino.moveLeft(); // 左に移動
+                        repaint(); // 再描画
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        currentTetromino.moveRight(); // 右に移動
+                        repaint(); // 再描画
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -52,5 +65,15 @@ public class TetrisField extends JPanel {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Tetris Field"); // 新しいJFrameを作成し、タイトルを設定
+        TetrisField field = new TetrisField(); // TetrisFieldのインスタンスを作成
+        frame.add(field); // フィールドをフレームに追加
+        frame.pack(); // フレームのサイズを内容に合わせて調整
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // フレームを閉じたときにアプリケーションを終了
+        frame.setLocationRelativeTo(null); // フレームを画面中央に表示
+        frame.setVisible(true); // フレームを表示
     }
 }
