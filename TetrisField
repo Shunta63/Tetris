@@ -17,8 +17,8 @@ public class TetrisField extends JPanel {
         setFocusable(true); // キーボード入力を受け取るためにフォーカスを設定
     }
 
-    public void setCurrentTetromino(Tetromino tetromino) {
-        this.currentTetromino = tetromino;
+    public Tetromino getCurrentTetromino() {
+        return currentTetromino;
     }
 
     @Override
