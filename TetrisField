@@ -62,15 +62,4 @@ public class TetrisField extends JPanel {
 
     public void moveTetrominoLeft() {
         if (currentTetromino.canMoveLeft()) {
-            currentTetromino.moveLeft();
-            repaint();
-        }
-    }
-
-    public void moveTetrominoRight() {
-        if (currentTetromino.canMoveRight()) {
-            currentTetromino.moveRight();
-            repaint();
-        }
-    }
-}
+            currentTetromino​⬤
