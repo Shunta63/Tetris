@@ -13,7 +13,7 @@ public class TetrisField extends JPanel {
     public TetrisField() {
         setPreferredSize(new Dimension(COLS * CELL_SIZE, ROWS * CELL_SIZE)); // パネルの推奨サイズを設定
         setBackground(Color.BLACK); // 背景色を黒に設定
-        int startCol = (COLS / 2) - 1; // 初期位置を中央に設定
+        int startCol = (COLS / 2) - 2; // 初期位置を中央に設定
         currentTetromino = new Tetromino(0, 0, startCol); // 初期テトリミノを作成
 
         setFocusable(true); // キーボード入力を受け取るためにフォーカスを設定
@@ -44,6 +44,13 @@ public class TetrisField extends JPanel {
             for (int col = 0; col < COLS; col++) {
                 g.drawRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE); // 矩形を描画
             }
+        }
+
+        // 左右の壁を描画
+        g.setColor(Color.DARK_GRAY);
+        for (int row = 0; row < ROWS; row++) {
+            g.fillRect(0, row * CELL_SIZE, CELL_SIZE, CELL_SIZE); // 左の壁
+            g.fillRect((COLS - 1) * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE); // 右の壁
         }
 
         // 現在のテトリミノを描画
