@@ -58,15 +58,19 @@ public class Tetromino {
     }
 
     public void moveLeft() {
-        if (canMove(col - 1)) {
-            this.col--;
-        }
+        col--;
     }
 
     public void moveRight() {
-        if (canMove(col + 1)) {
-            this.col++;
-        }
+        col++;
+    }
+
+    public boolean canMoveLeft() {
+        return canMove(col - 1);
+    }
+
+    public boolean canMoveRight() {
+        return canMove(col + 1);
     }
 
     private boolean canMove(int newCol) {
