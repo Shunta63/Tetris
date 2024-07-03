@@ -18,10 +18,12 @@ public class TetrisGame extends JFrame {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        field.moveTetrominoLeft(); // 左に移動
+                        field.getCurrentTetromino().moveLeft(); // 左に移動
+                        field.repaint(); // 再描画
                         break;
                     case KeyEvent.VK_RIGHT:
-                        field.moveTetrominoRight(); // 右に移動
+                        field.getCurrentTetromino().moveRight(); // 右に移動
+                        field.repaint(); // 再描画
                         break;
                 }
             }
