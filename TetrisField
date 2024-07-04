@@ -1,36 +1,33 @@
 package mytetris;
 
-// AWTライブラリをインポート
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import javax.swing.*; // Swingライブラリをインポート
+import java.awt.*; // AWTライブラリをインポート
 import java.awt.event.KeyAdapter; // キーイベントを処理するためのクラスをインポート
-import java.awt.event.KeyEvent; // キーイベントクラスをインポート
+import java.awt.event.KeyEvent; // キーイベントをインポート
+import java.awt.event.ActionEvent; // アクションイベントをインポート
+import java.awt.event.ActionListener; // アクションリスナーをインポート
 
-// Swingライブラリをインポート
-import javax.swing.JPanel;
-
-public class TetrisField extends JPanel { // TetrisFieldクラスの宣言
-    private final int ROWS = 20; // フィールドの行数
-    private final int COLS = 10; // フィールドの列数
-    private final int CELL_SIZE = 30; // セルのサイズ
-    private final int[][] field = new int[ROWS][COLS]; // フィールドを表す2次元配列
-
-    private Tetromino currentTetromino; // 現在のテトリミノ
+public class TetrisField extends JPanel { // TetrisFieldクラスはJPanelを継承
+    private final int ROWS = 20; // フィールドの行数を定義
+    private final int COLS = 10; // フィールドの列数を定義
+    private final int CELL_SIZE = 30; // セルのサイズを定義
+    private final int[][] field = new int[ROWS][COLS]; // フィールドを表す2次元配列を作成
+    private Tetromino currentTetromino; // 現在のテトリミノを保持する変数
+    private Timer timer; // タイマーを保持する変数
 
     public TetrisField() { // コンストラクタ
-        setPreferredSize(new Dimension(COLS * CELL_SIZE, ROWS * CELL_SIZE)); // パネルの推奨サイズを設定
-        setBackground(Color.BLACK); // 背景色を黒に設定
-        int startCol = (COLS / 2) - 2; // テトリミノの初期列位置を計算
-        currentTetromino = Tetromino.createRandomTetromino(0, startCol); // ランダムなテトリミノを作成
+        setPreferredSize(new Dimension(COLS * CELL_SIZE, ROWS * CELL_SIZE)); // パネルのサイズを設定
+        setBackground(Color.BLACK); // パネルの背景色を黒に設定
+        int startCol = (COLS / 2) - 2; // テトリミノの初期位置を設定
+        currentTetromino = Tetromino.createRandomTetromino(0, startCol); // ランダムなテトリミノを生成
 
-        setFocusable(true); // パネルをフォーカス可能に設定
-        requestFocusInWindow(); // ウィンドウ内でフォーカスを要求
+        setFocusable(true); // パネルがフォーカスを受け取るように設定
+        requestFocusInWindow(); // パネルにフォーカスを要求
 
         addKeyListener(new KeyAdapter() { // キーリスナーを追加
             @Override
             public void keyPressed(KeyEvent e) { // キーが押されたときの処理
-                switch (e.getKeyCode()) { // 押されたキーの種類をチェック
+                switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT: // 左キーが押された場合
                         moveTetrominoLeft(); // テトリミノを左に移動
                         break;
@@ -40,19 +37,28 @@ public class TetrisField extends JPanel { // TetrisFieldクラスの宣言
                 }
             }
         });
+
+        // タイマーを設定し、一定の間隔でテトリミノを落下させる
+        timer = new Timer(1000, new ActionListener() { // 1秒ごとにアクションを実行するタイマーを作成
+            @Override
+            public void actionPerformed(ActionEvent e) { // タイマーが発火したときの処理
+                moveTetrominoDown(); // テトリミノを下に移動
+            }
+        });
+        timer.start(); // タイマーを開始
     }
 
     public Tetromino getCurrentTetromino() { // 現在のテトリミノを取得するメソッド
-        return currentTetromino;
+        return currentTetromino; // 現在のテトリミノを返す
     }
 
     public void setCurrentTetromino(Tetromino tetromino) { // 現在のテトリミノを設定するメソッド
-        this.currentTetromino = tetromino;
+        this.currentTetromino = tetromino; // テトリミノを設定
     }
 
     @Override
-    protected void paintComponent(Graphics g) { // パネルを描画するメソッド
-        super.paintComponent(g); // 親クラスのメソッドを呼び出す
+    protected void paintComponent(Graphics g) { // パネルの描画処理
+        super.paintComponent(g); // 親クラスの描画処理を呼び出す
         g.setColor(Color.GRAY); // 描画色を灰色に設定
 
         for (int row = 0; row < ROWS; row++) { // フィールドの行をループ
@@ -63,7 +69,7 @@ public class TetrisField extends JPanel { // TetrisFieldクラスの宣言
 
         for (int row = 0; row < ROWS; row++) { // フィールドの行をループ
             for (int col = 0; col < COLS; col++) { // フィールドの列をループ
-                if (field[row][col] == 1) { // フィールドにブロックがある場合
+                if (field[row][col] == 1) { // セルが埋まっている場合
                     g.setColor(Color.DARK_GRAY); // 描画色を暗い灰色に設定
                     g.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE); // セルを塗りつぶす
                 }
@@ -96,6 +102,48 @@ public class TetrisField extends JPanel { // TetrisFieldクラスの宣言
         if (currentTetromino.canMoveRight(field)) { // 右に移動可能かチェック
             currentTetromino.moveRight(); // 右に移動
             repaint(); // 再描画
+        }
+    }
+
+    public void moveTetrominoDown() { // テトリミノを下に移動するメソッド
+        if (canMoveDown()) { // 下に移動可能かチェック
+            currentTetromino.setPosition(currentTetromino.getRow() + 1, currentTetromino.getCol()); // テトリミノを下に移動
+            repaint(); // 再描画
+        } else { // 下に移動できない場合
+            lockTetromino(); // テトリミノを固定
+            currentTetromino = Tetromino.createRandomTetromino(0, (COLS / 2) - 2); // 新しいテトリミノを生成
+            repaint(); // 再描画
+        }
+    }
+
+    private boolean canMoveDown() { // テトリミノが下に移動可能かをチェックするメソッド
+        int[][] shape = currentTetromino.getShape(); // テトリミノの形状を取得
+        int rowOffset = currentTetromino.getRow(); // テトリミノの行位置を取得
+        int colOffset = currentTetromino.getCol(); // テトリミノの列位置を取得
+        for (int row = 0; row < shape.length; row++) { // テトリミノの行をループ
+            for (int col = 0; col < shape[row].length; col++) { // テトリミノの列をループ
+                if (shape[row][col] == 1) { // テトリミノのブロックがある場合
+                    int newRow = rowOffset + row + 1; // 新しい行位置を計算
+                    int newCol = colOffset + col; // 新しい列位置を計算
+                    if (newRow >= ROWS || field[newRow][newCol] == 1) { // 下に移動できない場合
+                        return false; // 移動不可を返す
+                    }
+                }
+            }
+        }
+        return true; // 移動可能を返す
+    }
+
+    private void lockTetromino() { // テトリミノをフィールドに固定するメソッド
+        int[][] shape = currentTetromino.getShape(); // テトリミノの形状を取得
+        int rowOffset = currentTetromino.getRow(); // テトリミノの行位置を取得
+        int colOffset = currentTetromino.getCol(); // テトリミノの列位置を取得
+        for (int row = 0; row < shape.length; row++) { // テトリミノの行をループ
+            for (int col = 0; col < shape[row].length; col++) { // テトリミノの列をループ
+                if (shape[row][col] == 1) { // テトリミノのブロックがある場合
+                    field[rowOffset + row][colOffset + col] = 1; // フィールドにブロックを固定
+                }
+            }
         }
     }
 }
